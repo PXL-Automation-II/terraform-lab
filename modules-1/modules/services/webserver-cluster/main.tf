@@ -1,10 +1,3 @@
-############################################################################
-# providers
-############################################################################
-
-provider "aws" {
-  region = "us-east-1"
-}
 
 ############################################################################
 # backend config
@@ -13,8 +6,8 @@ provider "aws" {
 terraform {
   backend "s3" {
     # Replace this with your bucket name!
-    bucket = "terraform-pxl-state"
-    key    = "staging/services/webserver-cluster/terraform.tfstate"
+    bucket = var.db_remote_state_bucket
+    key    = var.db_remote_state_key
     region = "us-east-1"
 
     # Replace this with your DynamoDB table name!
@@ -57,7 +50,7 @@ data "terraform_remote_state" "db" {
 ############################################################################
 
 resource "aws_security_group" "instance" {
-  name = "terraform-example-instance"
+  name = "${var.cluster_name}-instance"
   ingress {
     from_port   = var.server_port
     to_port     = var.server_port
@@ -67,7 +60,7 @@ resource "aws_security_group" "instance" {
 }
 
 resource "aws_security_group" "alb" {
-  name = "terraform-example-alb"
+  name = "${var.cluster_name}-alb"
 
   # Allow inbound HTTP requests
   ingress {
@@ -100,7 +93,7 @@ resource "aws_launch_configuration" "example" {
     db_address  = data.terraform_remote_state.db.outputs.address
     db_port     = data.terraform_remote_state.db.outputs.port
   })
-  
+
   # Required when using a launch configuration with an auto scaling group.
   lifecycle {
     create_before_destroy = true
@@ -121,7 +114,7 @@ resource "aws_autoscaling_group" "example" {
   max_size = 10
   tag {
     key                 = "Name"
-    value               = "terraform-asg-example"
+    value               = var.cluster_name
     propagate_at_launch = true
   }
 }
@@ -130,7 +123,7 @@ resource "aws_autoscaling_group" "example" {
 ############################################################################
 
 resource "aws_lb" "example" {
-  name               = "terraform-asg-example"
+  name               = var.cluster_name
   load_balancer_type = "application"
   subnets            = data.aws_subnets.default.ids
   security_groups    = [aws_security_group.alb.id]
@@ -154,7 +147,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_target_group" "asg" {
-  name     = "terraform-asg-example"
+  name     = var.cluster_name
   port     = var.server_port
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id

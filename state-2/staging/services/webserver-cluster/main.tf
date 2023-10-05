@@ -89,7 +89,7 @@ resource "aws_security_group" "alb" {
 ############################################################################
 
 resource "aws_launch_configuration" "example" {
-  image_id        = "ami-067d1e60475437da2"
+  image_id        = "ami-053b0d53c279acc90"
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.instance.id]
 

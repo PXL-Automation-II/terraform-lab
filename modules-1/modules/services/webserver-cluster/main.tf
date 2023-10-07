@@ -1,20 +1,13 @@
 
 ############################################################################
-# backend config
+# backend config removed for module
 ############################################################################
 
+/*
 terraform {
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket = var.db_remote_state_bucket
-    key    = var.db_remote_state_key
-    region = "us-east-1"
-
-    # Replace this with your DynamoDB table name!
-    dynamodb_table = "terraform-pxl-locks"
-    encrypt        = true
-  }
+  backend "s3" { }
 }
+*/
 
 ############################################################################
 # data
@@ -35,9 +28,8 @@ data "terraform_remote_state" "db" {
   backend = "s3"
 
   config = {
-    # Replace this with your bucket name!
-    bucket = "terraform-pxl-state"
-    key    = "staging/data-stores/mysql/terraform.tfstate"
+    bucket = var.db_remote_state_bucket
+    key    = var.db_remote_state_key
     region = "us-east-1"
   }
 }
@@ -83,12 +75,12 @@ resource "aws_security_group" "alb" {
 
 resource "aws_launch_configuration" "example" {
   image_id        = "ami-053b0d53c279acc90"
-  instance_type   = "t2.micro"
+  instance_type   = var.instance_type
   security_groups = [aws_security_group.instance.id]
 
 
   # Render the User Data script as a template
-  user_data = templatefile("user-data.sh", {
+  user_data = templatefile("${path.module}/user-data.sh", {
     server_port = var.server_port
     db_address  = data.terraform_remote_state.db.outputs.address
     db_port     = data.terraform_remote_state.db.outputs.port
@@ -110,8 +102,8 @@ resource "aws_autoscaling_group" "example" {
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
-  min_size = 2
-  max_size = 10
+  min_size = var.min_size
+  max_size = var.max_size
   tag {
     key                 = "Name"
     value               = var.cluster_name

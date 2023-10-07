@@ -1,3 +1,16 @@
+terraform {
+  backend "s3" {
+    # Replace this with your bucket name!
+    bucket = "terraform-pxl-state"
+    key    = "staging/data-stores/mysql/terraform.tfstate"
+    region = "us-east-1"
+
+    # Replace this with your DynamoDB table name!
+    dynamodb_table = "terraform-pxl-locks"
+    encrypt        = true
+  }
+}
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -12,17 +25,4 @@ resource "aws_db_instance" "example" {
   # How do we set the username and password?
   username = var.db_username
   password = var.db_password
-}
-
-terraform {
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket         = "terraform-pxl-state"
-    key            = "staging/data-stores/mysql/terraform.tfstate"
-    region         = "us-east-1"
-
-    # Replace this with your DynamoDB table name!
-    dynamodb_table = "terraform-pxl-locks"
-    encrypt        = true
-  }
 }

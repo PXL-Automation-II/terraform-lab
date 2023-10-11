@@ -27,7 +27,6 @@ module "webserver_cluster" {
   max_size      = 10
 }
 
-/*
 resource "aws_autoscaling_schedule" "scale_out_in_morning" {
   scheduled_action_name = "scale-out-during-business-hours"
   min_size              = 2
@@ -44,4 +43,3 @@ resource "aws_autoscaling_schedule" "scale_in_at_night" {
   recurrence            = "0 17 * * *"
   autoscaling_group_name = module.webserver_cluster.asg_name
 }
-*/

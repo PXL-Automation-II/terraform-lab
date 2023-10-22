@@ -7,8 +7,17 @@ packer {
   }
 }
 
+variable "ami_prefix" {
+  type    = string
+  default = "learn-packer-linux-aws-redis"
+}
+
+locals {
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
+}
+
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "learn-packer-linux-aws-pxl-2"
+  ami_name      = "${var.ami_prefix}-${local.timestamp}"
   instance_type = "t2.micro"
   region        = "us-east-1"
   source_ami_filter {

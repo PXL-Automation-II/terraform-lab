@@ -1,0 +1,1 @@
+ami_prefix = "packer-in-pxl-2"

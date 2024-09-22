@@ -77,34 +77,42 @@ resource "aws_security_group" "alb" {
 # instances
 ############################################################################
 
-resource "aws_launch_configuration" "example" {
-  image_id        = "ami-053b0d53c279acc90"
-  instance_type   = "t2.micro"
-  security_groups = [aws_security_group.instance.id]
+resource "aws_launch_template" "example" {
+  name = "example-launch-template"
 
-  user_data = <<-EOF
-              #!/bin/bash
-              echo "Hello, World!" > index.html
-              nohup busybox httpd -f -p ${var.server_port} &
-              EOF
-  # Required when using a launch configuration with an auto scaling group.
-  lifecycle {
-    create_before_destroy = true
+  image_id      = "ami-053b0d53c279acc90"
+  instance_type = "t2.micro"
+
+  iam_instance_profile {
+    name = "LabInstanceProfile"
   }
+
+  user_data = base64encode(<<-EOF
+    #!/bin/bash
+    echo "Hello, World" > /home/ubuntu/index.html
+    nohup busybox httpd -f -p ${var.server_port} -h /home/ubuntu &
+  EOF
+  )
+
+  vpc_security_group_ids = [aws_security_group.instance.id]
 }
 
 # auto-scaling
 ############################################################################
 
 resource "aws_autoscaling_group" "example" {
-  launch_configuration = aws_launch_configuration.example.name
-  vpc_zone_identifier  = data.aws_subnets.default.ids
+  launch_template {
+    id      = aws_launch_template.example.id
+    version = "$Latest"
+  }
 
-  target_group_arns = [aws_lb_target_group.asg.arn]
-  health_check_type = "ELB"
+  vpc_zone_identifier = data.aws_subnets.default.ids
+  target_group_arns   = [aws_lb_target_group.asg.arn]
+  health_check_type   = "ELB"
 
   min_size = 2
   max_size = 10
+
   tag {
     key                 = "Name"
     value               = "terraform-asg-example"

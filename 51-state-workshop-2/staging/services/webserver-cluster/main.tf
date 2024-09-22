@@ -100,12 +100,7 @@ resource "aws_launch_configuration" "example" {
     db_address  = data.terraform_remote_state.db.outputs.address
     db_port     = data.terraform_remote_state.db.outputs.port
   })
-  
-  # Required when using a launch configuration with an auto scaling group.
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+
 
 # auto-scaling
 ############################################################################

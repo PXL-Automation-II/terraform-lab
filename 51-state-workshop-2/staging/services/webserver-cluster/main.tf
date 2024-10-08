@@ -88,11 +88,15 @@ resource "aws_security_group" "alb" {
 # instances
 ############################################################################
 
-resource "aws_launch_configuration" "example" {
-  image_id        = "ami-053b0d53c279acc90"
-  instance_type   = "t2.micro"
-  security_groups = [aws_security_group.instance.id]
+resource "aws_launch_template" "example" {
+  name = "example-launch-template"
 
+  image_id      = "ami-07eeacb3005b9beae"
+  instance_type = "t2.micro"
+
+  iam_instance_profile {
+    name = "LabInstanceProfile"
+  }
 
   # Render the User Data script as a template
   user_data = templatefile("user-data.sh", {
@@ -101,19 +105,27 @@ resource "aws_launch_configuration" "example" {
     db_port     = data.terraform_remote_state.db.outputs.port
   })
 
+  vpc_security_group_ids = [aws_security_group.instance.id]
+}
 
 # auto-scaling
 ############################################################################
 
 resource "aws_autoscaling_group" "example" {
-  launch_configuration = aws_launch_configuration.example.name
-  vpc_zone_identifier  = data.aws_subnets.default.ids
+  launch_template {
+    id      = aws_launch_template.example.id
+    version = "$Latest"
+  }
 
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
+  # vpc_zone_identifier  = data.aws_subnets.default.ids # let AWS decide which subnets to use
+  availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"] # specify valid AZs
+
   min_size = 2
   max_size = 10
+
   tag {
     key                 = "Name"
     value               = "terraform-asg-example"
@@ -178,3 +190,4 @@ resource "aws_lb_listener_rule" "asg" {
     target_group_arn = aws_lb_target_group.asg.arn
   }
 }
+

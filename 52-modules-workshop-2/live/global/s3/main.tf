@@ -49,6 +49,7 @@ resource "aws_dynamodb_table" "terraform_locks" {
   }
 }
 
+/* comment */
 terraform {
-  backend "s3" { }
+  backend "s3" {}
 }

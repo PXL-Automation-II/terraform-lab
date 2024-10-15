@@ -91,9 +91,9 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 ############################################################################
 
 resource "aws_launch_template" "example" {
-  name = "example-launch-template"
+  name = "${var.cluster_name}-lt"
 
-  image_id      = "ami-07eeacb3005b9beae"
+  image_id      = "ami-0cad6ee50670e3d0e"
   instance_type = "t2.micro"
 
   iam_instance_profile {

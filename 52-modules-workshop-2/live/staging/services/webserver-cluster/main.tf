@@ -21,7 +21,7 @@ module "webserver_cluster" {
   # replace with your unique bucket name
   db_remote_state_bucket = "terraform-pxl-state"
   db_remote_state_key    = "staging/data-stores/mysql/terraform.tfstate"
-  instance_type          = "t2.micro"
+  instance_type          = "t3.micro"
   min_size               = 2
   max_size               = 2
 }

@@ -6,7 +6,9 @@ stage 1: create S3 bucket and dynamodb
 3. `terraform apply`
 
 stage 2: move backend to s3/dynamodb
+
 4. remove comments
+   
 5. useage of partial config file for backend:
 
 bash:

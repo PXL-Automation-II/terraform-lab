@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
+  region = "us-east-1"
 }
 
 variable "server_port" {
@@ -27,8 +27,8 @@ output "alb_dns_name" {
 resource "aws_launch_template" "example" {
   name = "example-launch-template"
 
-  image_id      = "ami-0cad6ee50670e3d0e"
-  instance_type = "t2.micro"
+  image_id      = "ami-0360c520857e3138f"
+  instance_type = "t3.micro"
 
   iam_instance_profile {
     name = "LabInstanceProfile"
@@ -36,8 +36,8 @@ resource "aws_launch_template" "example" {
 
   user_data = base64encode(<<-EOF
     #!/bin/bash
-    echo "Hello, World" > /home/ubuntu/index.html
-    nohup busybox httpd -f -p ${var.server_port} -h /home/ubuntu &
+    echo "Hello, World!" > /home/ubuntu/index.html
+    nohup busybox httpd -f -p ${var.server_port} &
     EOF
   )
 
@@ -55,7 +55,7 @@ resource "aws_autoscaling_group" "example" {
   health_check_type = "ELB"
 
   # vpc_zone_identifier  = data.aws_subnets.default.ids # let AWS decide which subnets to use
-  availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"] # specify valid AZs
+  availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"] # specify valid AZs
 
   min_size = 2
   max_size = 10

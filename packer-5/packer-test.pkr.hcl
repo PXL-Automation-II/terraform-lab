@@ -8,7 +8,7 @@ packer {
 }
 source "amazon-ebs" "custom-ami" {
   ami_name      = "packer-pxl-custom-ami-{{timestamp}}"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   region        = "us-east-1"
   source_ami    = "ami-08c40ec9ead489470"
   ssh_username  = "ubuntu"

@@ -80,8 +80,8 @@ resource "aws_security_group" "alb" {
 resource "aws_launch_template" "example" {
   name = "example-launch-template"
 
-  image_id      = "ami-053b0d53c279acc90"
-  instance_type = "t2.micro"
+  image_id      = "ami-0360c520857e3138f"
+  instance_type = "t3.micro"
 
   iam_instance_profile {
     name = "LabInstanceProfile"
@@ -89,8 +89,8 @@ resource "aws_launch_template" "example" {
 
   user_data = base64encode(<<-EOF
     #!/bin/bash
-    echo "Hello, World" > /home/ubuntu/index.html
-    nohup busybox httpd -f -p ${var.server_port} -h /home/ubuntu &
+    echo "Hello, World!" > /home/ubuntu/index.html
+    nohup busybox httpd -f -p ${var.server_port} &
   EOF
   )
 

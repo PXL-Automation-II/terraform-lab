@@ -93,8 +93,8 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 resource "aws_launch_template" "example" {
   name = "${var.cluster_name}-lt"
 
-  image_id      = "ami-0cad6ee50670e3d0e"
-  instance_type = "t2.micro"
+  image_id      = "ami-0360c520857e3138f"
+  instance_type = "t3.micro"
 
   iam_instance_profile {
     name = "LabInstanceProfile"

@@ -20,7 +20,7 @@ variable "db_remote_state_key" {
 }
 
 variable "instance_type" {
-  description = "The type of EC2 Instances to run (e.g. t2.micro)"
+  description = "The type of EC2 Instances to run (e.g. t3.micro)"
   type        = string
 }
 

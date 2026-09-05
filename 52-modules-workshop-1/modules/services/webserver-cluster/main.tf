@@ -93,7 +93,7 @@ resource "aws_security_group_rule" "allow_all_outbound" {
 resource "aws_launch_template" "example" {
   name = "${var.cluster_name}-lt"
 
-  image_id      = "ami-0360c520857e3138f"
+  image_id      = "ami-025d99823a4caad37"
   instance_type = "t3.micro"
 
   iam_instance_profile {

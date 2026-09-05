@@ -91,7 +91,7 @@ resource "aws_security_group" "alb" {
 resource "aws_launch_template" "example" {
   name = "example-launch-template"
 
-  image_id      = "ami-0360c520857e3138f"
+  image_id      = "ami-025d99823a4caad37"
   instance_type = "t3.micro"
 
   iam_instance_profile {

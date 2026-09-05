@@ -10,7 +10,7 @@ source "amazon-ebs" "custom-ami" {
   ami_name      = "packer-pxl-custom-ami-{{timestamp}}"
   instance_type = "t3.micro"
   region        = "us-east-1"
-  source_ami    = "ami-08c40ec9ead489470"
+  source_ami    = "ami-025d99823a4caad37"
   ssh_username  = "ubuntu"
   profile       = "default"
   tags = {

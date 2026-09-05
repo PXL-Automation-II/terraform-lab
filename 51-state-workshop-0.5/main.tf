@@ -13,6 +13,7 @@ terraform {
 
 
 resource "aws_instance" "example" {
-  ami           = "ami-0360c520857e3138f"
-  instance_type = "t3.micro"
+  ami                  = "ami-025d99823a4caad37"
+  instance_type        = "t3.micro"
+  iam_instance_profile = "LabInstanceProfile"
 }

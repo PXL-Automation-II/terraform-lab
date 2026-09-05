@@ -58,7 +58,7 @@ resource "aws_autoscaling_group" "example" {
   availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"] # specify valid AZs
 
   min_size = 2
-  max_size = 10
+  max_size = 3
 
   tag {
     key                 = "Name"
@@ -73,6 +73,13 @@ resource "aws_security_group" "instance" {
     from_port   = var.server_port
     to_port     = var.server_port
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }

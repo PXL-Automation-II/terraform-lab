@@ -1,7 +1,6 @@
-# Automatically find the root terragrunt.hcl and inherit its
-# configuration
-include {
-  path = find_in_parent_folders()
+# Automatically find root.hcl and inherit its configuration
+include "root" {
+  path = find_in_parent_folders("root.hcl")
 }
 
 terraform {

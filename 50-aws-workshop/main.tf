@@ -37,6 +37,7 @@ resource "aws_launch_template" "example" {
   user_data = base64encode(<<-EOF
     #!/bin/bash
     echo "Hello, World!" > /home/ubuntu/index.html
+    which busybox || (apt-get update -y && apt-get install -y busybox)
     nohup busybox httpd -f -p ${var.server_port} -h /home/ubuntu &
     EOF
   )
@@ -55,10 +56,10 @@ resource "aws_autoscaling_group" "example" {
   health_check_type = "ELB"
 
   # vpc_zone_identifier  = data.aws_subnets.default.ids # let AWS decide which subnets to use
-  availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"] # specify valid AZs
+  availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d"] # specify valid AZs in us-east-1
 
   min_size = 2
-  max_size = 3
+  max_size = 6 # AWS Academy Learner Lab: maximum 6
 
   tag {
     key                 = "Name"
@@ -69,7 +70,10 @@ resource "aws_autoscaling_group" "example" {
 
 resource "aws_security_group" "instance" {
   name = "terraform-example-instance"
+
+  # Only the web server port is open
   ingress {
+    description = "HTTP web server"
     from_port   = var.server_port
     to_port     = var.server_port
     protocol    = "tcp"

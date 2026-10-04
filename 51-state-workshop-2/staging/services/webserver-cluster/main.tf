@@ -1,26 +1,11 @@
-############################################################################
-# providers
-############################################################################
+terraform {
+  backend "s3" {
+    key = "staging/services/webserver-cluster/terraform.tfstate"
+  }
+}
 
 provider "aws" {
   region = "us-east-1"
-}
-
-############################################################################
-# backend config
-############################################################################
-
-terraform {
-  backend "s3" {
-    # Replace this with your bucket name!
-    bucket = "terraform-pxl-state"
-    key    = "staging/services/webserver-cluster/terraform.tfstate"
-    region = "us-east-1"
-
-    # Replace this with your DynamoDB table name!
-    dynamodb_table = "terraform-pxl-locks"
-    encrypt        = true
-  }
 }
 
 ############################################################################
@@ -44,24 +29,30 @@ data "terraform_remote_state" "db" {
   config = {
     # Replace this with your bucket name!
     bucket = "terraform-pxl-state"
-    key    = "staging/data-stores/mysql/terraform.tfstate"
+    key    = "staging/data-storage/mysql/terraform.tfstate"
     region = "us-east-1"
   }
 }
 
 ############################################################################
-# resources
-############################################################################
-
 # networking
 ############################################################################
 
 resource "aws_security_group" "instance" {
   name = "terraform-example-instance"
+
   ingress {
+    description = "HTTP web server"
     from_port   = var.server_port
     to_port     = var.server_port
     protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -76,6 +67,7 @@ resource "aws_security_group" "alb" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   # Allow all outbound requests
   egress {
     from_port   = 0
@@ -85,6 +77,7 @@ resource "aws_security_group" "alb" {
   }
 }
 
+############################################################################
 # instances
 ############################################################################
 
@@ -93,6 +86,7 @@ resource "aws_launch_template" "example" {
 
   image_id      = "ami-025d99823a4caad37"
   instance_type = "t3.micro"
+  key_name      = "vockey" # AWS Academy Learner Lab key pair (labsuser.pem)
 
   iam_instance_profile {
     name = "LabInstanceProfile"
@@ -108,9 +102,6 @@ resource "aws_launch_template" "example" {
   vpc_security_group_ids = [aws_security_group.instance.id]
 }
 
-# auto-scaling
-############################################################################
-
 resource "aws_autoscaling_group" "example" {
   launch_template {
     id      = aws_launch_template.example.id
@@ -120,10 +111,11 @@ resource "aws_autoscaling_group" "example" {
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
-  vpc_zone_identifier = data.aws_subnets.default.ids # Let AWS determine which subnets to use
+  # vpc_zone_identifier  = data.aws_subnets.default.ids # let AWS decide which subnets to use
+  availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d"] # specify valid AZs in us-east-1
 
   min_size = 2
-  max_size = 10
+  max_size = 6 # AWS Academy Learner Lab: maximum 6
 
   tag {
     key                 = "Name"
@@ -132,8 +124,8 @@ resource "aws_autoscaling_group" "example" {
   }
 }
 
-
-# load-balancer
+############################################################################
+# load balancer
 ############################################################################
 
 resource "aws_lb" "example" {
@@ -180,14 +172,15 @@ resource "aws_lb_target_group" "asg" {
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
   priority     = 100
+
   condition {
     path_pattern {
       values = ["*"]
     }
   }
+
   action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.asg.arn
   }
 }
-

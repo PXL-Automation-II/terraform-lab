@@ -1,3 +1,13 @@
+terraform {
+  backend "s3" {
+    key = "prod/data-storage/mysql/terraform.tfstate"
+  }
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
 resource "aws_db_instance" "example" {
   identifier_prefix   = "terraform-pxl"
   engine              = "mysql"
@@ -5,7 +15,6 @@ resource "aws_db_instance" "example" {
   instance_class      = "db.t3.micro"
   skip_final_snapshot = true
   db_name             = "example_database"
-  # How do we set the username and password?
-  username = var.db_username
-  password = var.db_password
+  username            = var.db_username
+  password            = var.db_password
 }

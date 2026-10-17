@@ -17,6 +17,6 @@ $env:TF_VAR_db_password = "pxlpxlpxl"
 Then initialize with the backend settings and apply:
 
 ```bash
-terraform init -backend-config="./backend.hcl"
+terraform init -backend-config=./backend.hcl
 terraform apply
 ```

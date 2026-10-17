@@ -1,4 +1,6 @@
 terraform {
+  required_version = ">= 1.12.0" # native S3 locking needs 1.11, resource identity 1.12
+
   backend "s3" {
     key = "staging/services/webserver-cluster/terraform.tfstate"
   }
@@ -86,7 +88,6 @@ resource "aws_launch_template" "example" {
 
   image_id      = "ami-025d99823a4caad37"
   instance_type = "t3.micro"
-  key_name      = "vockey" # AWS Academy Learner Lab key pair (labsuser.pem)
 
   iam_instance_profile {
     name = "LabInstanceProfile"

@@ -7,7 +7,7 @@ remote_state {
   }
 
   config = {
-    bucket       = "terraform-pxl-tglab-state" # replace with a globally unique name
+    bucket       = "terraform-pxl-tg-state-1234" # replace 1234 with something unique: bucket names are global
     key          = "${replace(path_relative_to_include(), "\\", "/")}/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
@@ -18,5 +18,9 @@ remote_state {
 generate "provider" {
   path      = "provider.tf"
   if_exists = "overwrite"
-  contents  = file("provider.tf")
+  contents  = <<EOF
+provider "aws" {
+  region = "us-east-1"
+}
+EOF
 }

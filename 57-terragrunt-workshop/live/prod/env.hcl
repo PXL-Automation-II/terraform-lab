@@ -1,6 +1,6 @@
 locals {
   environment   = "prod"
   instance_type = "t3.small"
-  server_port   = 8080
-  instance_name = "prod-webserver"
+  min_size      = 2
+  max_size      = 4
 }

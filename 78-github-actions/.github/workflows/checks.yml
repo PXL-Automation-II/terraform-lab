@@ -1,0 +1,43 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-terragrunt
+
+      - name: Terraform formatting
+        run: terraform fmt -check -recursive runner
+
+      - name: Terragrunt formatting
+        run: terragrunt hcl fmt --check --working-dir live
+
+      - name: Validate the runner configuration
+        working-directory: runner
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      - uses: terraform-linters/setup-tflint@6ffdbaa3be476b3431f7275c26966ef32ff60337 # v6.3.2
+
+      - name: TFLint
+        run: tflint --chdir=runner
+
+      - name: Trivy security scan
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: config
+          scan-ref: runner
+          version: v0.76.1
+          severity: HIGH,CRITICAL
+          exit-code: "1"

@@ -1,0 +1,32 @@
+name: Drift
+
+on:
+  schedule:
+    - cron: "0 6 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  drift:
+    runs-on: [self-hosted, lab]
+    env:
+      TG_TF_PATH: terraform
+      TG_NON_INTERACTIVE: "true"
+      TG_NO_COLOR: "true"
+      TF_IN_AUTOMATION: "true"
+      TF_VAR_db_username: ${{ secrets.DB_USERNAME }}
+      TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: ./.github/actions/setup-terragrunt
+
+      - name: Plan staging, fail on changes
+        working-directory: live/staging
+        run: terragrunt run --all plan -- -detailed-exitcode

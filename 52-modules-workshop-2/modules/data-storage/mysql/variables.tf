@@ -1,3 +1,8 @@
+variable "identifier_prefix" {
+  description = "The start of the database name in RDS, for example staging-mysql-"
+  type        = string
+}
+
 variable "db_username" {
   description = "The username for the database"
   type        = string

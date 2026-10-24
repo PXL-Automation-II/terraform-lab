@@ -1,5 +1,5 @@
 resource "awscc_s3_bucket" "terraform_state" {
-  bucket_name = "terraform-pxl-state" # replace with a globally unique name
+  bucket_name = "terraform-pxl-state-1234" # replace 1234 with something unique: bucket names are global
 
   # Keep the full revision history of your state files
   versioning_configuration = {

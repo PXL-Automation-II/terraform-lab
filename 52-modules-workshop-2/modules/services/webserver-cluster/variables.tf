@@ -10,26 +10,32 @@ variable "cluster_name" {
 }
 
 variable "db_remote_state_bucket" {
-  description = "The name of the S3 bucket for the DB remote state"
+  description = "The name of the S3 bucket for the database's remote state"
   type        = string
 }
 
 variable "db_remote_state_key" {
-  description = "The path for the DB remote state in S3"
+  description = "The path for the database's remote state in S3"
   type        = string
 }
 
 variable "instance_type" {
-  description = "The type of EC2 Instances to run (e.g. t3.micro)"
+  description = "The type of EC2 instances to run (e.g. t3.micro)"
   type        = string
 }
 
 variable "min_size" {
-  description = "The minimum number of EC2 Instances in the ASG"
+  description = "The minimum number of EC2 instances in the ASG"
   type        = number
 }
 
 variable "max_size" {
-  description = "The maximum number of EC2 Instances in the ASG"
+  description = "The maximum number of EC2 instances in the ASG"
   type        = number
+}
+
+variable "server_text" {
+  description = "The text the web server returns"
+  type        = string
+  default     = "Hello, World"
 }

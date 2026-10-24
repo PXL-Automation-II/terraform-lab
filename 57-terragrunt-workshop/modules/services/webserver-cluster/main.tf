@@ -77,10 +77,20 @@ resource "aws_vpc_security_group_egress_rule" "alb_all_outbound" {
 # instances
 ############################################################################
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
+  }
+}
+
 resource "aws_launch_template" "example" {
   name = var.cluster_name
 
-  image_id      = "ami-025d99823a4caad37"
+  image_id      = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
 
   iam_instance_profile {

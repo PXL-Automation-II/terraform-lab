@@ -12,7 +12,7 @@ provider "aws" {
 
 module "webserver_cluster" {
   # replace with your own repository: github.com/YOUR-USER/terraform-modules
-  source = "github.com/PXL-Automation-II/tf-lab-modules//services/webserver-cluster?ref=v0.1.0"
+  source = "github.com/PXL-Automation-II/tf-lab-modules//services/webserver-cluster?ref=v0.1.1"
 
   cluster_name           = "webservers-prod"
   db_remote_state_bucket = "terraform-pxl-state-1234" # the bucket from 00-backend-bootstrap

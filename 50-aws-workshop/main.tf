@@ -24,10 +24,20 @@ output "alb_dns_name" {
   description = "The domain name of the load balancer"
 }
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
+  }
+}
+
 resource "aws_launch_template" "example" {
   name = "example-launch-template"
 
-  image_id      = "ami-025d99823a4caad37"
+  image_id      = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
   iam_instance_profile {

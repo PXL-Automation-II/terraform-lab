@@ -9,7 +9,7 @@ include "env" {
 
 terraform {
   # replace with your own repository: github.com/YOUR-USER/terraform-modules
-  source = "github.com/PXL-Automation-II/tf-lab-modules//data-storage/mysql?ref=v1.0.0"
+  source = "github.com/PXL-Automation-II/tf-lab-modules//data-storage/mysql?ref=v1.0.1"
 }
 
 inputs = {

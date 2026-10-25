@@ -2,9 +2,11 @@
 
 End state of [IaC CI/CD with GitHub Actions](https://pxl-automation-ii.github.io/terraform-course/#/78-github-actions): the Terragrunt project of the [Terragrunt workshop](https://pxl-automation-ii.github.io/terraform-course/#/57-terragrunt-workshop), with a pipeline that runs on a self-hosted runner in the AWS Academy Learner Lab.
 
-- `runner`: Terraform configuration of the runner, an EC2 instance with `LabInstanceProfile`. You apply it once from your own computer.
-- `live`: the Terragrunt project, with `staging` and `prod`.
-- `.github`: the workflows, and the composite action that installs Terraform and Terragrunt.
+| Directory | Contents |
+| --- | --- |
+| `runner` | Terraform configuration of the runner, an EC2 instance with `LabInstanceProfile`. You apply it once from your own computer. |
+| `live` | The Terragrunt project, with `staging` and `prod`. |
+| `.github` | The workflows, and the composite action that installs Terraform and Terragrunt. |
 
 The workflows:
 

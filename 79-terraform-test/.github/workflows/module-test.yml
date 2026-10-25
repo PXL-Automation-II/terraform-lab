@@ -1,0 +1,31 @@
+name: Module tests
+
+on:
+  pull_request:
+    paths: ["modules/**"]
+  push:
+    branches: [main]
+    paths: ["modules/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: modules/app-logs
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: 1.17.0
+
+      - name: Init
+        run: terraform init
+
+      # The unit and mocked tests use a fake AWS provider: no credentials needed
+      - name: Unit and mocked tests
+        run: terraform test -filter=tests/unit.tftest.hcl -filter=tests/mocked.tftest.hcl

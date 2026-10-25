@@ -2,8 +2,11 @@
 
 End state of the [Terragrunt workshop](https://pxl-automation-ii.github.io/terraform-course/#/57-terragrunt-workshop).
 
-- `live`: `root.hcl`, an `env.hcl` per environment, and one `terragrunt.hcl` per unit.
-- `modules`: the reusable modules, as released in [tf-lab-modules](https://github.com/PXL-Automation-II/tf-lab-modules) `v1.0.1`, the patch release of `v1.0.0` that looks up the AMI. The units use that tag.
+- `live`:
+  - `root.hcl`, an `env.hcl` per environment, and one `terragrunt.hcl` per unit.
+- `modules`:
+  - The reusable modules, as released in [tf-lab-modules](https://github.com/PXL-Automation-II/tf-lab-modules) `v1.0.1`, the patch release of `v1.0.0` that looks up the AMI.
+  - The units use that tag.
 
 Before you run anything:
 

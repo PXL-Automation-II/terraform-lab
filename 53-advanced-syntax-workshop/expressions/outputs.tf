@@ -6,12 +6,12 @@ output "short_upper_names" {
   value = [for name in var.names : upper(name) if length(name) < 5]
 }
 
-output "bios" {
-  value = [for name, role in var.hero_thousand_faces : "${name} is the ${role}"]
+output "descriptions" {
+  value = [for name, weight in var.weight_classes : "${name} is the ${weight}"]
 }
 
-output "upper_roles" {
-  value = { for name, role in var.hero_thousand_faces : upper(name) => upper(role) }
+output "upper_weights" {
+  value = { for name, weight in var.weight_classes : upper(name) => upper(weight) }
 }
 
 output "for_directive" {

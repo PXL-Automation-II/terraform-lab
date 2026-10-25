@@ -1,15 +1,15 @@
 variable "names" {
   description = "A list of names"
   type        = list(string)
-  default     = ["neo", "trinity", "morpheus"]
+  default     = ["mario", "bowser", "toad"]
 }
 
-variable "hero_thousand_faces" {
-  description = "Characters and their roles"
+variable "weight_classes" {
+  description = "Mario Kart characters and their weight class"
   type        = map(string)
   default = {
-    neo      = "hero"
-    trinity  = "love interest"
-    morpheus = "mentor"
+    mario  = "medium"
+    bowser = "heavy"
+    toad   = "light"
   }
 }

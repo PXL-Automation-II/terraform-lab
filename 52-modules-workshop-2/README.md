@@ -1,6 +1,6 @@
 # 52 - Modules workshop
 
-End state of the [Terraform modules workshop](https://pxl-automation-ii.github.io/terraform-course/#/52-modules-workshop-en).
+End state of the [Terraform modules workshop](https://pxl-automation-ii.github.io/terraform-course/#/52-modules-workshop).
 
 - `live`:
   - The configurations you deploy, per environment and component.

@@ -12,4 +12,4 @@ curl "http://$(terraform output -raw alb_dns_name)"
 
 The load balancer takes about two minutes, and answers `Hello, World!` shortly after the apply. Clean up with `terraform destroy`.
 
-The [state workshop](https://pxl-automation-ii.github.io/terraform-course/#/51-state-workshop-en) starts from this `main.tf`.
+The [state workshop](https://pxl-automation-ii.github.io/terraform-course/#/51-state-workshop) starts from this `main.tf`.

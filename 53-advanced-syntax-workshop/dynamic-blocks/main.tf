@@ -23,6 +23,16 @@ data "aws_ami" "ubuntu" {
   }
 }
 
+# The Availability Zones where t3.micro instances exist
+data "aws_ec2_instance_type_offerings" "t3_micro" {
+  location_type = "availability-zone"
+
+  filter {
+    name   = "instance-type"
+    values = ["t3.micro"]
+  }
+}
+
 resource "aws_launch_template" "example" {
   name          = "dynamic-blocks-example"
   image_id      = data.aws_ami.ubuntu.id
@@ -32,7 +42,7 @@ resource "aws_launch_template" "example" {
 # An ASG with 0 instances: enough to see the tags, and it costs nothing
 resource "aws_autoscaling_group" "example" {
   name               = "dynamic-blocks-example"
-  availability_zones = ["us-east-1a", "us-east-1b"]
+  availability_zones = data.aws_ec2_instance_type_offerings.t3_micro.locations
   min_size           = 0
   max_size           = 0
 

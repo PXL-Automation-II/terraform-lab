@@ -22,10 +22,25 @@ data "aws_vpc" "default" {
   default = true
 }
 
+# The Availability Zones that offer the instance type
+data "aws_ec2_instance_type_offerings" "instance_type" {
+  location_type = "availability-zone"
+
+  filter {
+    name   = "instance-type"
+    values = [var.instance_type]
+  }
+}
+
 data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
+  }
+
+  filter {
+    name   = "availability-zone"
+    values = data.aws_ec2_instance_type_offerings.instance_type.locations
   }
 }
 
@@ -127,7 +142,7 @@ resource "aws_autoscaling_group" "example" {
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
 
-  availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d"] # specify valid AZs in us-east-1
+  vpc_zone_identifier = data.aws_subnets.default.ids
 
   min_size = var.min_size
   max_size = var.max_size

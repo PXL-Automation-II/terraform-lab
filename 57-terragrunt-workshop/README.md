@@ -5,7 +5,7 @@ End state of the [Terragrunt workshop](https://pxl-automation-ii.github.io/terra
 - `live`:
   - `root.hcl`, an `env.hcl` per environment, and one `terragrunt.hcl` per unit.
 - `modules`:
-  - The reusable modules, as released in [tf-lab-modules](https://github.com/PXL-Automation-II/tf-lab-modules) `v1.0.1`, the patch release of `v1.0.0` that looks up the AMI.
+  - The reusable modules, as released in [tf-lab-modules](https://github.com/PXL-Automation-II/tf-lab-modules) `v1.0.2`, the patch release of `v1.0.0` that looks up the AMI and picks the Availability Zones that offer the instance type.
   - The units use that tag.
 
 Before you run anything:

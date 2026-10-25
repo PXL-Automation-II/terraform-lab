@@ -5,8 +5,10 @@ End state of the [Terraform modules workshop](https://pxl-automation-ii.github.i
 - `live`:
   - The configurations you deploy, per environment and component.
 - `modules`:
-  - The reusable modules, as released in [tf-lab-modules](https://github.com/PXL-Automation-II/tf-lab-modules) `v0.2.1`.
-  - The clusters use the released versions: staging `v0.2.1`, prod `v0.1.1`. These patch releases match the `v0.2.0` and `v0.1.0` of the workshop: the PXL `v0.2.0` and `v0.1.0` still had a hard-coded AMI ID.
+  - The reusable modules, as released in [tf-lab-modules](https://github.com/PXL-Automation-II/tf-lab-modules) `v0.2.2`.
+  - The clusters use the released versions: staging `v0.2.2`, prod `v0.1.2`.
+    - These patch releases match the `v0.2.0` and `v0.1.0` of the workshop.
+    - They look up the Ubuntu AMI, and put the instances only in the Availability Zones that offer the instance type.
   - The databases use the local path `../../../../modules/data-storage/mysql`.
 
 Before you run anything:

@@ -1,0 +1,33 @@
+- name: Base image for every server
+  hosts: localhost
+  connection: local
+  become: true
+
+  tasks:
+    - name: Install all updates
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: dist
+
+    - name: Install the tools every server needs
+      ansible.builtin.apt:
+        name:
+          - unattended-upgrades
+          - chrony
+        state: present
+
+    - name: Install security updates automatically
+      ansible.builtin.copy:
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        content: |
+          APT::Periodic::Update-Package-Lists "1";
+          APT::Periodic::Unattended-Upgrade "1";
+        mode: "0644"
+
+    - name: Allow no SSH login with a password
+      ansible.builtin.copy:
+        dest: /etc/ssh/sshd_config.d/10-no-passwords.conf
+        content: |
+          PasswordAuthentication no
+          PermitRootLogin no
+        mode: "0644"

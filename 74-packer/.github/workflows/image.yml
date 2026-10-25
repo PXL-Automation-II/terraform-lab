@@ -1,0 +1,45 @@
+name: Image
+
+on:
+  push:
+    branches: [main]
+    paths: ["packer/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Never build two images at the same time
+concurrency:
+  group: image
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: [self-hosted, lab]
+    env:
+      APP_VERSION: 1.2.${{ github.run_number }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: packer
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: hashicorp/setup-packer@ce93c3c08a6c2ff2275bf4b54ff0d9a75f6c9789 # v3.4.0
+        with:
+          version: 1.16.2
+
+      - name: Check the template
+        run: |
+          packer init .
+          packer fmt -check .
+          packer validate -var app_version=$APP_VERSION .
+
+      - name: Build the image
+        run: packer build -color=false -timestamp-ui -var app_version=$APP_VERSION .
+
+      - name: Write the image to the summary
+        run: |
+          ami=$(grep -o 'ami-[0-9a-f]*' manifest.json | tail -1)
+          echo "Image $APP_VERSION: \`$ami\`" >> "$GITHUB_STEP_SUMMARY"
